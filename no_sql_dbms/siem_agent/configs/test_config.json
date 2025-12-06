@@ -1,0 +1,38 @@
+{
+    "server": {
+        "host": "127.0.0.1",
+        "port": 8080
+    },
+    "agent": {
+        "id": "test-agent-01"
+    },
+    "sources": [
+        {
+            "name": "auth",
+            "enabled": true,
+            "path": "/tmp/test_auth.log"
+        },
+        {
+            "name": "auditd",
+            "enabled": true,
+            "path": "/tmp/test_audit.log"
+        },
+        {
+            "name": "bash_history",
+            "enabled": true,
+            "path": "/tmp/test_bash_history",
+            "users": ["testuser"]
+        }
+    ],
+    "sender": {
+        "batch_size": 2,
+        "send_interval": 3,
+        "max_retries": 1,
+        "retry_delay": 1
+    },
+    "buffer": {
+        "max_memory_events": 10,
+        "disk_backup": false,
+        "disk_path": "/tmp/siem_test_buffer"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "server": {
+        "host": "127.0.0.1",
+        "port": 8080
+    },
+    "agent": {
+        "id": "ubuntu-agent-01",
+        "log_level": "debug"
+    },
+    "sources": [
+        {
+            "name": "auditd",
+            "enabled": true,
+            "path": "/var/log/audit/audit.log"
+        },
+        {
+            "name": "syslog",
+            "enabled": true,
+            "path": "/var/log/syslog"
+        },
+        {
+            "name": "auth",
+            "enabled": true,
+            "path": "/var/log/auth.log"
+        },
+        {
+            "name": "bash_history",
+            "enabled": true,
+            "path_pattern": "/home/{USER}/.bash_history",
+            "users": ["root", "ubuntu", "testuser"]
+        }
+    ],
+    "sender": {
+        "batch_size": 100,
+        "send_interval": 30,
+        "max_retries": 3,
+        "retry_delay": 5
+    },
+    "buffer": {
+        "max_memory_events": 1000,
+        "disk_backup": true,
+        "disk_path": "/tmp/siem_buffer"
+    },
+    "monitoring": {
+        "poll_interval": 1,
+        "position_file": "/var/lib/siem-agent/positions.json"
+    }
+}

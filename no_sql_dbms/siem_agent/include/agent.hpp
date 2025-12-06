@@ -21,7 +21,7 @@ namespace siem {
 
         bool is_running() const { return running; }
 
-        void daemonize();  // Делаем публичным
+        void daemonize();
 
         static void setup_signal_handlers();
 
@@ -41,4 +41,4 @@ namespace siem {
         static void signal_handler(int signal);
     };
 
-} // namespace siem
+}

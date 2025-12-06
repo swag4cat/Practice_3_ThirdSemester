@@ -56,14 +56,12 @@ namespace siem {
             if (!batch.empty()) {
                 std::cout << "[INFO] Sending batch of " << batch.size() << " events to collection 'security_events'" << std::endl;
 
-                // Формируем запрос в формате, который ожидает сервер
                 json request = {
                     {"database", "security_events"},
                     {"operation", "insert"},
                     {"data", json::array()}
                 };
 
-                // Добавляем события как документы
                 for (const auto& event : batch) {
                     request["data"].push_back(event.to_json());
                 }
@@ -222,4 +220,4 @@ namespace siem {
         return sock_fd >= 0;
     }
 
-} // namespace siem
+}

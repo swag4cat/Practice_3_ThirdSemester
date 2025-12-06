@@ -2,7 +2,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include "../../parcer/json.hpp"
 
 using json = nlohmann::json;
@@ -13,25 +12,21 @@ namespace siem {
         std::string name;
         bool enabled;
         std::string path;
-        std::vector<std::string> users; // Для bash_history
+        std::vector<std::string> users;
     };
 
     class Config {
     public:
         Config() = default;
 
-        // Загрузить конфигурацию из файла JSON
         bool load(const std::string& config_path);
 
-        // Загрузить конфигурацию из JSON объекта
         bool load_from_json(const json& j);
 
-        // Сохранить конфигурацию в файл
         bool save(const std::string& config_path) const;
 
         int get_poll_interval() const { return poll_interval; }
 
-        // Геттеры
         const std::string& get_host() const { return host; }
         int get_port() const { return port; }
         const std::string& get_agent_id() const { return agent_id; }
@@ -62,10 +57,10 @@ namespace siem {
         bool disk_backup = true;
         std::string disk_path = "/tmp/siem_buffer";
 
-        int poll_interval = 1;  // Добавляем
+        int poll_interval = 1;
         bool check_rotation = true;
         bool save_position = true;
         std::string position_file = "/var/lib/siem-agent/positions.json";
     };
 
-} // namespace siem
+}

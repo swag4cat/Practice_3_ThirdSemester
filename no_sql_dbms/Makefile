@@ -13,11 +13,11 @@ SERVER_SOURCES = $(SRCDIR)/db_server.cpp $(SRCDIR)/utils.cpp \
 				 $(SRCDIR)/query_evaluator.cpp $(SRCDIR)/btree_index.cpp \
 				 $(SRCDIR)/collection.cpp
 
-# Исходники SIEM-агента (ДОБАВЛЕН position_manager.cpp)
+# Исходники SIEM-агента
 SIEM_SOURCES = $(SIEMDIR)/src/agent.cpp $(SIEMDIR)/src/config.cpp \
 			   $(SIEMDIR)/src/db_sender.cpp $(SIEMDIR)/src/event_buffer.cpp \
 			   $(SIEMDIR)/src/event.cpp $(SIEMDIR)/src/log_collector.cpp \
-			   $(SIEMDIR)/src/position_manager.cpp $(SIEMDIR)/src/main.cpp  # Добавлено!
+			   $(SIEMDIR)/src/position_manager.cpp $(SIEMDIR)/src/main.cpp
 
 # Цели
 CLIENT_TARGET = db_client

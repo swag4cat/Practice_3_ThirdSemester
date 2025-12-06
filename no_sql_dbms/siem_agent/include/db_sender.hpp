@@ -12,7 +12,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-// Forward declarations
 namespace siem {
     class Config;
     class EventBuffer;
@@ -26,20 +25,16 @@ namespace siem {
         DBSender(const Config& config, EventBuffer& buffer);
         ~DBSender();
 
-        // Запуск отправителя
         void start();
 
-        // Остановка отправителя
         void stop();
 
-        // Отправить события напрямую (для тестов)
         bool send_immediately(const Vector<SecurityEvent>& events);
 
-        // Проверить соединение
         bool is_connected() const;
 
     private:
-        void run();  // Основной цикл
+        void run();
         bool connect_to_server();
         void disconnect();
         bool send_json(const json& j);
@@ -58,4 +53,4 @@ namespace siem {
         std::condition_variable cv;
     };
 
-} // namespace siem
+}

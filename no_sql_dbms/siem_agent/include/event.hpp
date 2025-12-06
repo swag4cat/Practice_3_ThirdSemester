@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <chrono>
 #include "../../parcer/json.hpp"
 
 using json = nlohmann::json;
@@ -12,20 +11,15 @@ namespace siem {
     public:
         SecurityEvent() = default;
 
-        // Конструктор из полей
         SecurityEvent(const std::string& source, const std::string& event_type,
                       const std::string& severity, const std::string& raw_log);
 
-        // Конструктор из JSON
         SecurityEvent(const json& j);
 
-        // Конвертация в JSON (формат из методички стр. 1)
         json to_json() const;
 
-        // Конвертация в сетевой формат (методичка стр. 2)
         json to_network_json(const std::string& agent_id) const;
 
-        // Геттеры
         const std::string& get_timestamp() const { return timestamp; }
         const std::string& get_hostname() const { return hostname; }
         const std::string& get_source() const { return source; }
@@ -36,7 +30,6 @@ namespace siem {
         const std::string& get_command() const { return command; }
         const std::string& get_raw_log() const { return raw_log; }
 
-        // Сеттеры
         void set_timestamp(const std::string& ts) { timestamp = ts; }
         void set_hostname(const std::string& name) { hostname = name; }
         void set_source(const std::string& src) { source = src; }
@@ -62,4 +55,4 @@ namespace siem {
         std::string raw_log;
     };
 
-} // namespace siem
+}

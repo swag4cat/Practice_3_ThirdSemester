@@ -3,8 +3,6 @@
 #include <string>
 #include <unordered_map>
 #include <mutex>
-#include <filesystem>
-#include "../../parcer/json.hpp"
 
 namespace siem {
 
@@ -36,4 +34,4 @@ namespace siem {
         mutable std::mutex mutex_;
     };
 
-} // namespace siem
+}

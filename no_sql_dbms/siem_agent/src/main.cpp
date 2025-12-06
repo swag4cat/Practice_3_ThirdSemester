@@ -4,7 +4,7 @@
 
 int main(int argc, char* argv[]) {
     std::cout << "========================================" << std::endl;
-    std::cout << "        SIEM Agent v1.0" << std::endl;
+    std::cout << "               SIEM Agent               " << std::endl;
     std::cout << "========================================" << std::endl;
 
     std::string config_path = "configs/agent_config.json";
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        // Пока не используем демонизацию
+        // Раскоментируйте для демонизации агента (все логи будут идти в syslog)
         // if (run_as_daemon) {
         //     std::cout << "Running as daemon..." << std::endl;
         //     agent.daemonize();

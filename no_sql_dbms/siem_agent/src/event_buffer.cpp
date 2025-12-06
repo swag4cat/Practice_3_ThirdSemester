@@ -1,5 +1,6 @@
 #include "../include/event_buffer.hpp"
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <chrono>
 #include <iomanip>
@@ -32,7 +33,6 @@ namespace siem {
 
         memory_buffer.push_back(event);
 
-        // Если буфер переполнен, сохраняем на диск
         if (memory_buffer.size() > max_memory_events && use_disk_backup) {
             save_to_disk();
             memory_buffer.clear();
@@ -44,7 +44,6 @@ namespace siem {
     Vector<SecurityEvent> EventBuffer::get_batch(size_t batch_size) {
         std::unique_lock<std::mutex> lock(buffer_mutex);
 
-        // Ждём, пока не наберётся достаточно событий или не истечёт таймаут
         if (memory_buffer.size() < batch_size) {
             buffer_cv.wait_for(lock, std::chrono::seconds(1));
         }
@@ -56,7 +55,6 @@ namespace siem {
             batch.push_back(memory_buffer[i]);
         }
 
-        // Удаляем взятые события
         for (size_t i = 0; i < count; ++i) {
             memory_buffer.erase(0);
         }
@@ -112,7 +110,6 @@ namespace siem {
 
                 std::cout << "[INFO] Loaded " << memory_buffer.size() << " events from disk" << std::endl;
 
-                // Удаляем файл после загрузки
                 fs::remove(filename);
             }
 
@@ -125,7 +122,6 @@ namespace siem {
         std::lock_guard<std::mutex> lock(buffer_mutex);
         memory_buffer.clear();
 
-        // Удаляем файл дампа если существует
         if (use_disk_backup) {
             std::string filename = get_dump_filename();
             if (fs::exists(filename)) {
@@ -150,7 +146,6 @@ namespace siem {
                 fs::create_directories(disk_path);
             }
         } catch (...) {
-            // Игнорируем ошибки создания директории
         }
     }
 
@@ -166,4 +161,4 @@ namespace siem {
         return ss.str();
     }
 
-} // namespace siem
+}

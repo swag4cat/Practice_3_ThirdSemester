@@ -1,7 +1,6 @@
 #include "../include/config.hpp"
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 
 using json = nlohmann::json;
 
@@ -26,18 +25,15 @@ namespace siem {
 
     bool Config::load_from_json(const json& j) {
         try {
-            // Server config
             if (j.contains("server")) {
                 host = j["server"].value("host", "127.0.0.1");
                 port = j["server"].value("port", 8080);
             }
 
-            // Agent config
             if (j.contains("agent")) {
                 agent_id = j["agent"].value("id", "agent-ubuntu-01");
             }
 
-            // Sources
             if (j.contains("sources") && j["sources"].is_array()) {
                 sources.clear();
                 for (const auto& source_json : j["sources"]) {
@@ -60,7 +56,6 @@ namespace siem {
                 }
             }
 
-            // Sender config
             if (j.contains("sender")) {
                 batch_size = j["sender"].value("batch_size", 100);
                 send_interval = j["sender"].value("send_interval", 30);
@@ -68,7 +63,6 @@ namespace siem {
                 retry_delay = j["sender"].value("retry_delay", 5);
             }
 
-            // Buffer config
             if (j.contains("buffer")) {
                 max_memory_events = j["buffer"].value("max_memory_events", 1000);
                 disk_backup = j["buffer"].value("disk_backup", true);
@@ -143,4 +137,4 @@ namespace siem {
         }
     }
 
-} // namespace siem
+}

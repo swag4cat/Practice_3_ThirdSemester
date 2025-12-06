@@ -3,7 +3,6 @@
 #include "event.hpp"
 #include "../../include/vector.hpp"
 #include <string>
-#include <fstream>
 #include <mutex>
 #include <condition_variable>
 
@@ -37,4 +36,4 @@ namespace siem {
         std::condition_variable buffer_cv;
     };
 
-} // namespace siem
+}

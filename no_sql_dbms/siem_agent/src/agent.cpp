@@ -1,6 +1,5 @@
 #include "../include/agent.hpp"
 #include <iostream>
-#include <fstream>
 #include <csignal>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -135,7 +134,6 @@ namespace siem {
     void SIEMAgent::daemonize() {
         std::cout << "Daemonizing SIEM Agent..." << std::endl;
 
-        // Первый fork
         pid_t pid = fork();
         if (pid < 0) {
             std::cerr << "[ERROR] First fork failed" << std::endl;
@@ -143,17 +141,14 @@ namespace siem {
         }
 
         if (pid > 0) {
-            // Родительский процесс завершается
             exit(EXIT_SUCCESS);
         }
 
-        // Создаем новую сессию
         if (setsid() < 0) {
             std::cerr << "[ERROR] Failed to create new session" << std::endl;
             exit(EXIT_FAILURE);
         }
 
-        // Второй fork
         pid = fork();
         if (pid < 0) {
             std::cerr << "[ERROR] Second fork failed" << std::endl;
@@ -164,18 +159,15 @@ namespace siem {
             exit(EXIT_SUCCESS);
         }
 
-        // Меняем рабочую директорию
         if (chdir("/") < 0) {
             std::cerr << "[ERROR] Failed to change directory to /" << std::endl;
             exit(EXIT_FAILURE);
         }
 
-        // Закрываем стандартные дескрипторы
         close(STDIN_FILENO);
         close(STDOUT_FILENO);
         close(STDERR_FILENO);
 
-        // Перенаправляем в /dev/null
         int dev_null = open("/dev/null", O_RDWR);
         if (dev_null < 0) {
             exit(EXIT_FAILURE);
@@ -192,14 +184,12 @@ namespace siem {
     bool SIEMAgent::setup_directories() {
         try {
             if (config->get_disk_backup()) {
-                // Используем локальную директорию вместо системной
                 std::string local_buffer = "./siem_agent/buffer";
                 fs::create_directories(local_buffer);
                 std::cout << "[INFO] Created buffer directory: "
                 << local_buffer << std::endl;
             }
 
-            // Создаем локальную директорию для конфигов
             fs::path config_dir = "siem_agent/configs";
             if (!fs::exists(config_dir)) {
                 fs::create_directories(config_dir);
@@ -235,4 +225,4 @@ namespace siem {
         }
     }
 
-} // namespace siem
+}

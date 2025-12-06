@@ -4,7 +4,6 @@
 #include "../include/config.hpp"
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <regex>
 #include <cstring>
 #include <unistd.h>
@@ -16,7 +15,7 @@
 #include <fcntl.h>
 #include <poll.h>
 
-using json = nlohmann::json;  // Добавь!
+using json = nlohmann::json;
 
 namespace siem {
 
@@ -42,7 +41,6 @@ SecurityEvent AuditdParser::parse_line(const std::string& line) {
     event.set_event_type(event_type);
     event.set_severity(severity);
 
-    // Извлекаем пользователя
     if (!auid.empty() && auid != "-1") {
         try {
             uid_t user_id = std::stoi(auid);
@@ -67,14 +65,12 @@ SecurityEvent AuditdParser::parse_line(const std::string& line) {
         }
     }
 
-    // Извлекаем процесс
     if (!comm.empty()) {
         event.set_process(comm);
     } else if (!exe.empty()) {
         event.set_process(fs::path(exe).filename().string());
     }
 
-    // Извлекаем команду из аргументов
     if (!a0.empty() && a0.find("/") != std::string::npos) {
         event.set_command(a0);
     } else if (!a1.empty() && a1.find("/") != std::string::npos) {
@@ -293,7 +289,7 @@ SecurityEvent BashHistoryParser::parse_line(const std::string& line,
 
 LogCollector::LogCollector(EventBuffer& buffer, const Config& config)
     : buffer_ref(buffer), config_ref(config),
-      position_manager(config.get_position_file()),  // Используем из конфига!
+      position_manager(config.get_position_file()),
       inotify_fd(-1) {
 
     position_manager.load_positions();
@@ -586,7 +582,6 @@ void LogCollector::process_log_file(const LogSource& source,
               << ", last pos: " << pos.last_position
               << ", file size: " << st.st_size << std::endl;
 
-    // Проверяем ротацию (включая случай когда файл впервые видим)
     if (pos.inode.empty() || current_inode != pos.inode) {
         if (pos.inode.empty()) {
             std::cout << "[INFO] First time seeing file: " << path << std::endl;
@@ -595,10 +590,9 @@ void LogCollector::process_log_file(const LogSource& source,
                       << " (" << pos.inode << " -> " << current_inode << ")" << std::endl;
         }
         pos.last_position = 0;
-        pos.inode = current_inode; // Обновляем inode!
+        pos.inode = current_inode;
     }
 
-    // Проверяем усечение файла
     if (st.st_size < pos.last_position) {
         std::cout << "[INFO] File truncated: " << path << std::endl;
         pos.last_position = 0;
@@ -610,7 +604,6 @@ void LogCollector::process_log_file(const LogSource& source,
         return;
     }
 
-    // Перемещаемся к последней позиции
     if (pos.last_position > 0) {
         file.seekg(pos.last_position);
         if (file.fail()) {
@@ -628,7 +621,6 @@ void LogCollector::process_log_file(const LogSource& source,
     while (std::getline(file, line) && running) {
         if (line.empty()) continue;
 
-        // Удаляем NUL символы и другие управляющие символы
         line.erase(std::remove_if(line.begin(), line.end(),
                                   [](char c) { return c == '\0' || (c >= 0 && c < 32 && c != '\t' && c != '\n' && c != '\r'); }),
                    line.end());
@@ -657,17 +649,14 @@ void LogCollector::process_log_file(const LogSource& source,
         }
     }
 
-    // ВАЖНО: Сохраняем позицию ДАЖЕ если файл пустой или прочитан до конца
     std::streampos current_pos = file.tellg();
 
     if (current_pos == std::streampos(-1)) {
-        // Если tellg() вернул -1, используем размер файла как позицию
         current_pos = st.st_size;
         std::cout << "[DEBUG] tellg() returned -1, using file size as position: "
                   << current_pos << std::endl;
     }
 
-    // Всегда обновляем позицию (даже если ничего не прочитали)
     pos.last_position = current_pos;
     pos.inode = current_inode;
     pos.last_modification = st.st_mtime;
@@ -685,4 +674,4 @@ void LogCollector::process_log_file(const LogSource& source,
     file.close();
 }
 
-} // namespace siem
+}

@@ -1,9 +1,9 @@
 #include "../include/position_manager.hpp"
 #include <iostream>
 #include <fstream>
-#include <sstream>
+#include "../../parcer/json.hpp"
 
-using json = nlohmann::json;  // ДОБАВЬ ЭТУ СТРОКУ!
+using json = nlohmann::json;
 
 namespace siem {
 
@@ -128,7 +128,6 @@ void PositionManager::update_position(const std::string& filename,
     pos.last_position = position;
     pos.last_modification = modification_time;
 
-    // Периодически сохраняем позиции (каждые 10 обновлений)
     static int save_counter = 0;
     save_counter++;
     if (save_counter >= 10) {
@@ -143,4 +142,4 @@ void PositionManager::remove_position(const std::string& filename) {
     std::cout << "[INFO] Removed position tracking for: " << filename << std::endl;
 }
 
-} // namespace siem
+}

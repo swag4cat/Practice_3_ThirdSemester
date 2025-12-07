@@ -3,7 +3,6 @@
 #include "event.hpp"
 #include "config.hpp"
 #include "../../include/vector.hpp"
-#include <string>
 #include <thread>
 #include <atomic>
 #include <mutex>

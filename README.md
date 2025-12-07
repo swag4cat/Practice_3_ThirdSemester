@@ -81,8 +81,6 @@ no_sql_dbms/
 │      ├── install.sh
 │      └── siem-agent.service
 │
-├── working_config.json                  # Демонстрационная конфигурация агента
-│
 ├── Makefile
 │
 └── databases/                           # Хранилище данных
